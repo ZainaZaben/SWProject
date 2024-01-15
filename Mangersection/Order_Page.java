@@ -1,0 +1,760 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package com.mycompany.mangersection;
+
+import java.awt.Color;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+/**
+ *
+ * @author hp
+ */
+
+public class Order_Page extends javax.swing.JFrame {
+String Id_driver= "";
+ String status = "";
+    /**
+     * Creates new form Order_Page
+     */
+    public Order_Page() {
+        initComponents();
+        Show_orderTable();
+    }
+   public Connection getConnection(){
+        Connection con;
+        try{
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/delivery?zeroDateTimeBehavior=CONVERT_TO_NULL", "root", "");
+                    return con;
+        }catch (SQLException e){
+          return null;  
+        } 
+    }
+    public ArrayList<Orders> orderList(String searchVal){
+      ArrayList<Orders> orderList = new ArrayList<Orders>();
+      Connection connection = getConnection();
+      String query1 = "SELECT `email` FROM `login`";
+       Statement st0;
+       ResultSet rs0;
+       String email = " ";
+       try {
+           st0 = connection.createStatement();
+           rs0 = st0.executeQuery(query1);
+
+
+           while(rs0.next())
+           {
+            email = rs0.getString("email");
+           }
+
+       } 
+      catch (SQLException e) {
+           e.printStackTrace();
+       }
+      String query = "SELECT `adress` FROM `manger` where `email` = '"+email+"'";
+       Statement st1;
+       ResultSet rs1;
+       String address = " ";
+       try {
+           st1 = connection.createStatement();
+           rs1 = st1.executeQuery(query);
+
+
+           while(rs1.next())
+           {
+            address = rs1.getString("adress");
+           }
+
+       } 
+      catch (SQLException e) {
+           e.printStackTrace();
+       }
+      
+      String quary = "SELECT * FROM `order` WHERE (CONCAT(`id`,`senderName`,`receiverName`,`type`,`address`) like '%"+searchVal+"%' and `address`='"+address+"')";
+      Statement st;
+       ResultSet rs;
+       
+       try {
+           st = connection.createStatement();
+           rs = st.executeQuery(quary);
+
+           Orders Order;
+
+           while(rs.next())
+           {
+               Order = new Orders(rs.getInt("id"),rs.getString("senderName"),rs.getString("receiverName"),
+               rs.getString("type"),rs.getString("Price"),rs.getInt("Phone"),
+               rs.getString("address"),rs.getInt("driverID"));
+               orderList.add(Order);
+               Id_driver =  rs.getString("driverid");
+           status = rs.getString("status");
+           }
+
+       } 
+      catch (SQLException e) {
+       }
+       return orderList;
+    }
+    public void Show_orderTable(){
+        ArrayList <Orders> listOrder = orderList(ValToSearch.getText());
+DefaultTableModel model = new DefaultTableModel();
+        model.setColumnIdentifiers(new Object[]{"ID","Sender","Receiver","Type","Phone","Price","Address"});     
+        Object[] row = new Object[7];
+        for(int i =0;i<listOrder.size();i++){
+            row[0] = listOrder.get(i).getId();
+            row[1] = listOrder.get(i).getsenderName();
+            row[2] = listOrder.get(i).getrecieverName();
+            row[3] = listOrder.get(i).getType();
+            row[4] = listOrder.get(i).getPrice();
+            row[5] = listOrder.get(i).getPhone();
+            row[6] = listOrder.get(i).getAddress();
+            
+            model.addRow(row);
+        }
+        jTable_Display_Users.setModel(model);
+    }
+    public void excuteSQLquery(String quary, String massege){
+        Connection con = getConnection();
+         Statement st;
+       try{
+           st = con.createStatement();
+           if((st.executeUpdate(quary)) == 1)
+           {
+               // refresh jtable data
+               DefaultTableModel model = (DefaultTableModel)jTable_Display_Users.getModel();
+               model.setRowCount(0);
+               Show_orderTable();
+               
+               JOptionPane.showMessageDialog(null, "Data "+massege+" Succefully");
+           }else{
+               JOptionPane.showMessageDialog(null, "Data Not "+massege);
+           }
+       }catch(Exception ex){
+           ex.printStackTrace();
+       }
+    }
+    public static String Array[]=new String[9];
+    public String[] getTable(){
+        System.out.println("here get tabel");
+       return Array;
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel23 = new javax.swing.JLabel();
+        ValToSearch = new javax.swing.JTextField();
+        search = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable_Display_Users = new javax.swing.JTable();
+        sidePare3 = new javax.swing.JPanel();
+        Orders2 = new javax.swing.JPanel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel26 = new javax.swing.JLabel();
+        Disribute_order2 = new javax.swing.JPanel();
+        jLabel27 = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
+        Driver2 = new javax.swing.JPanel();
+        jLabel29 = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        Add_driver2 = new javax.swing.JPanel();
+        jLabel45 = new javax.swing.JLabel();
+        jLabel46 = new javax.swing.JLabel();
+        Edit_Driver2 = new javax.swing.JPanel();
+        jLabel47 = new javax.swing.JLabel();
+        jLabel48 = new javax.swing.JLabel();
+        Edit_order2 = new javax.swing.JPanel();
+        jLabel49 = new javax.swing.JLabel();
+        jLabel50 = new javax.swing.JLabel();
+        jLabel51 = new javax.swing.JLabel();
+        jSeparator5 = new javax.swing.JSeparator();
+        jLabel52 = new javax.swing.JLabel();
+        logout2 = new javax.swing.JPanel();
+        jLabel53 = new javax.swing.JLabel();
+        jLabel54 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel2.setBackground(new java.awt.Color(245, 124, 54));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Order List");
+
+        jSeparator2.setForeground(new java.awt.Color(255, 255, 255));
+
+        jLabel23.setIcon(new javax.swing.ImageIcon("C:\\Users\\hp\\Documents\\NetBeansProjects\\Mangersection\\src\\main\\java\\MangerIcon\\LOGO.png")); // NOI18N
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(53, 53, 53)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 290, Short.MAX_VALUE)
+                .addComponent(jLabel23)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel23)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 14, 750, -1));
+        jPanel1.add(ValToSearch, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 160, 190, 30));
+
+        search.setBackground(new java.awt.Color(245, 124, 54));
+        search.setIcon(new javax.swing.ImageIcon("C:\\Users\\hp\\Documents\\NetBeansProjects\\Mangersection\\src\\main\\java\\MangerIcon\\icons8-search-24.png")); // NOI18N
+        search.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        search.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                searchMouseClicked(evt);
+            }
+        });
+        search.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchActionPerformed(evt);
+            }
+        });
+        jPanel1.add(search, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 160, 40, 30));
+
+        jTable_Display_Users.setAutoCreateRowSorter(true);
+        jTable_Display_Users.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID", "Sender name", "Receiver name", "Type", "Phone", "Price", "Address"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Short.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Short.class, java.lang.Short.class, java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jTable_Display_Users.setGridColor(new java.awt.Color(255, 255, 255));
+        jTable_Display_Users.setSelectionBackground(new java.awt.Color(255, 204, 204));
+        jTable_Display_Users.setSelectionForeground(new java.awt.Color(153, 0, 51));
+        jTable_Display_Users.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTable_Display_UsersMousePressed(evt);
+            }
+        });
+        jScrollPane1.setViewportView(jTable_Display_Users);
+
+        jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(272, 207, 710, 410));
+
+        sidePare3.setBackground(new java.awt.Color(218, 98, 9));
+        sidePare3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        Orders2.setBackground(new java.awt.Color(245, 124, 54));
+        Orders2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        Orders2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Orders2MouseClicked(evt);
+            }
+        });
+
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel17.setText("Orders");
+
+        jLabel26.setIcon(new javax.swing.ImageIcon("C:\\Users\\hp\\Documents\\NetBeansProjects\\Mangersection\\src\\main\\java\\MangerIcon\\icons8-package-24.png")); // NOI18N
+
+        javax.swing.GroupLayout Orders2Layout = new javax.swing.GroupLayout(Orders2);
+        Orders2.setLayout(Orders2Layout);
+        Orders2Layout.setHorizontalGroup(
+            Orders2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Orders2Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(62, Short.MAX_VALUE))
+        );
+        Orders2Layout.setVerticalGroup(
+            Orders2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Orders2Layout.createSequentialGroup()
+                .addGap(8, 8, 8)
+                .addGroup(Orders2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        sidePare3.add(Orders2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 150, 260, -1));
+
+        Disribute_order2.setBackground(new java.awt.Color(218, 98, 9));
+        Disribute_order2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        Disribute_order2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Disribute_order2MouseClicked(evt);
+            }
+        });
+
+        jLabel27.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel27.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel27.setText("Distribute orders");
+
+        jLabel28.setIcon(new javax.swing.ImageIcon("C:\\Users\\hp\\Documents\\NetBeansProjects\\Mangersection\\src\\main\\java\\MangerIcon\\icons8-list-24.png")); // NOI18N
+
+        javax.swing.GroupLayout Disribute_order2Layout = new javax.swing.GroupLayout(Disribute_order2);
+        Disribute_order2.setLayout(Disribute_order2Layout);
+        Disribute_order2Layout.setHorizontalGroup(
+            Disribute_order2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Disribute_order2Layout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jLabel28)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(65, Short.MAX_VALUE))
+        );
+        Disribute_order2Layout.setVerticalGroup(
+            Disribute_order2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Disribute_order2Layout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(Disribute_order2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel27, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel28, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        sidePare3.add(Disribute_order2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 250, 260, -1));
+
+        Driver2.setBackground(new java.awt.Color(218, 98, 9));
+        Driver2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        Driver2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Driver2MouseClicked(evt);
+            }
+        });
+
+        jLabel29.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel29.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel29.setText("Drivers");
+        jLabel29.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel29MouseClicked(evt);
+            }
+        });
+
+        jLabel30.setIcon(new javax.swing.ImageIcon("C:\\Users\\hp\\Documents\\NetBeansProjects\\Mangersection\\src\\main\\java\\MangerIcon\\icons8-driver-24.png")); // NOI18N
+
+        javax.swing.GroupLayout Driver2Layout = new javax.swing.GroupLayout(Driver2);
+        Driver2.setLayout(Driver2Layout);
+        Driver2Layout.setHorizontalGroup(
+            Driver2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Driver2Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLabel30)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(63, Short.MAX_VALUE))
+        );
+        Driver2Layout.setVerticalGroup(
+            Driver2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Driver2Layout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addGroup(Driver2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel29)
+                    .addComponent(jLabel30))
+                .addContainerGap(17, Short.MAX_VALUE))
+        );
+
+        sidePare3.add(Driver2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 260, -1));
+
+        Add_driver2.setBackground(new java.awt.Color(218, 98, 9));
+        Add_driver2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        Add_driver2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Add_driver2MouseClicked(evt);
+            }
+        });
+
+        jLabel45.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel45.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel45.setText("Add driver");
+
+        jLabel46.setIcon(new javax.swing.ImageIcon("C:\\Users\\hp\\Documents\\NetBeansProjects\\Mangersection\\src\\main\\java\\MangerIcon\\icons8-add-new-16.png")); // NOI18N
+
+        javax.swing.GroupLayout Add_driver2Layout = new javax.swing.GroupLayout(Add_driver2);
+        Add_driver2.setLayout(Add_driver2Layout);
+        Add_driver2Layout.setHorizontalGroup(
+            Add_driver2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(Add_driver2Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jLabel46, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel45, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(64, Short.MAX_VALUE))
+        );
+        Add_driver2Layout.setVerticalGroup(
+            Add_driver2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Add_driver2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(Add_driver2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel46, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(Add_driver2Layout.createSequentialGroup()
+                        .addGap(0, 2, Short.MAX_VALUE)
+                        .addComponent(jLabel45)))
+                .addContainerGap())
+        );
+
+        sidePare3.add(Add_driver2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 300, 260, -1));
+
+        Edit_Driver2.setBackground(new java.awt.Color(218, 98, 9));
+        Edit_Driver2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        Edit_Driver2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Edit_Driver2MouseClicked(evt);
+            }
+        });
+
+        jLabel47.setBackground(new java.awt.Color(218, 98, 9));
+        jLabel47.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel47.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel47.setText("Edit Driver information");
+
+        jLabel48.setIcon(new javax.swing.ImageIcon("C:\\Users\\hp\\Documents\\NetBeansProjects\\Mangersection\\src\\main\\java\\MangerIcon\\editdriver.png")); // NOI18N
+
+        javax.swing.GroupLayout Edit_Driver2Layout = new javax.swing.GroupLayout(Edit_Driver2);
+        Edit_Driver2.setLayout(Edit_Driver2Layout);
+        Edit_Driver2Layout.setHorizontalGroup(
+            Edit_Driver2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Edit_Driver2Layout.createSequentialGroup()
+                .addContainerGap(7, Short.MAX_VALUE)
+                .addComponent(jLabel48)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel47)
+                .addGap(29, 29, 29))
+        );
+        Edit_Driver2Layout.setVerticalGroup(
+            Edit_Driver2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Edit_Driver2Layout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addGroup(Edit_Driver2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jLabel48, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jLabel47, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(22, 22, 22))
+        );
+
+        sidePare3.add(Edit_Driver2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 350, 260, -1));
+
+        Edit_order2.setBackground(new java.awt.Color(218, 98, 9));
+        Edit_order2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        Edit_order2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Edit_order2MouseClicked(evt);
+            }
+        });
+
+        jLabel49.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel49.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel49.setText("Edit order information");
+
+        jLabel50.setIcon(new javax.swing.ImageIcon("C:\\Users\\hp\\Documents\\NetBeansProjects\\Mangersection\\src\\main\\java\\MangerIcon\\editorder.png")); // NOI18N
+
+        javax.swing.GroupLayout Edit_order2Layout = new javax.swing.GroupLayout(Edit_order2);
+        Edit_order2.setLayout(Edit_order2Layout);
+        Edit_order2Layout.setHorizontalGroup(
+            Edit_order2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Edit_order2Layout.createSequentialGroup()
+                .addContainerGap(15, Short.MAX_VALUE)
+                .addComponent(jLabel50)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel49)
+                .addGap(34, 34, 34))
+        );
+        Edit_order2Layout.setVerticalGroup(
+            Edit_order2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Edit_order2Layout.createSequentialGroup()
+                .addContainerGap(17, Short.MAX_VALUE)
+                .addGroup(Edit_order2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel49)
+                    .addComponent(jLabel50))
+                .addGap(15, 15, 15))
+        );
+
+        sidePare3.add(Edit_order2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 400, 260, -1));
+
+        jLabel51.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel51.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel51.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel51.setText("Delivery System");
+        sidePare3.add(jLabel51, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 70, -1, -1));
+
+        jSeparator5.setBackground(new java.awt.Color(255, 255, 255));
+        jSeparator5.setForeground(new java.awt.Color(255, 255, 255));
+        jSeparator5.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        sidePare3.add(jSeparator5, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 100, 180, 10));
+
+        jLabel52.setIcon(new javax.swing.ImageIcon("C:\\Users\\hp\\Documents\\NetBeansProjects\\Mangersection\\src\\main\\java\\MangerIcon\\delivery.png")); // NOI18N
+        sidePare3.add(jLabel52, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, -1, -1));
+
+        logout2.setBackground(new java.awt.Color(218, 98, 9));
+        logout2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        logout2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel53.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel53.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel53.setText("Logout");
+        logout2.add(jLabel53, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 0, -1, 30));
+
+        jLabel54.setIcon(new javax.swing.ImageIcon("C:\\Users\\hp\\Downloads\\icons8-logout-24 (1).png")); // NOI18N
+        logout2.add(jLabel54, new org.netbeans.lib.awtextra.AbsoluteConstraints(14, 0, -1, 33));
+
+        sidePare3.add(logout2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 523, 260, 40));
+
+        jPanel1.add(sidePare3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, -1, 670));
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void searchMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_searchMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_searchMouseClicked
+
+    private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
+        // TODO add your handling code here:
+        Show_orderTable();
+    }//GEN-LAST:event_searchActionPerformed
+
+    private void Orders1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Orders1MouseClicked
+        // TODO add your handling code here:
+        Order_Page orderpage = new Order_Page();
+        orderpage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_Orders1MouseClicked
+
+    private void Disribute_order1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Disribute_order1MouseClicked
+        // TODO add your handling code here:
+        Distribute_order distribuetPage = new Distribute_order();
+        distribuetPage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_Disribute_order1MouseClicked
+
+    private void jLabel24MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel24MouseClicked
+        // TODO add your handling code here:
+        driverPage driverPage = new driverPage();
+        driverPage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jLabel24MouseClicked
+
+    private void Driver1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Driver1MouseClicked
+        // TODO add your handling code here:
+        driverPage driverpage = new driverPage();
+        driverpage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_Driver1MouseClicked
+
+    private void Add_driver1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Add_driver1MouseClicked
+        // TODO add your handling code here:
+        Add_Driver_Frame orderpage = new Add_Driver_Frame();
+        orderpage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_Add_driver1MouseClicked
+
+    private void Edit_Driver1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Edit_Driver1MouseClicked
+        // TODO add your handling code here:
+        Add_Driver_Frame orderpage = new Add_Driver_Frame();
+        orderpage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_Edit_Driver1MouseClicked
+
+    private void Edit_order1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Edit_order1MouseClicked
+        // TODO add your handling code here:
+        edit_order_frame orderpage = new edit_order_frame();
+        orderpage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_Edit_order1MouseClicked
+
+    private void Orders2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Orders2MouseClicked
+        // TODO add your handling code here:
+        Order_Page orderpage = new Order_Page();
+        orderpage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_Orders2MouseClicked
+
+    private void Disribute_order2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Disribute_order2MouseClicked
+        // TODO add your handling code here:
+        Distribute_order distribuetPage = new Distribute_order();
+        distribuetPage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_Disribute_order2MouseClicked
+
+    private void jLabel29MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel29MouseClicked
+        // TODO add your handling code here:
+        driverPage driverPage = new driverPage();
+        driverPage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jLabel29MouseClicked
+
+    private void Driver2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Driver2MouseClicked
+        // TODO add your handling code here:
+        driverPage driverpage = new driverPage();
+        driverpage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_Driver2MouseClicked
+
+    private void Add_driver2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Add_driver2MouseClicked
+        // TODO add your handling code here:
+        Add_Driver_Frame orderpage = new Add_Driver_Frame();
+        orderpage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_Add_driver2MouseClicked
+
+    private void Edit_Driver2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Edit_Driver2MouseClicked
+        // TODO add your handling code here:
+        edit_Driver orderpage = new edit_Driver();
+        orderpage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_Edit_Driver2MouseClicked
+
+    private void Edit_order2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Edit_order2MouseClicked
+        // TODO add your handling code here:
+        edit_order_frame orderpage = new edit_order_frame();
+        orderpage.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_Edit_order2MouseClicked
+
+    private void jTable_Display_UsersMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable_Display_UsersMousePressed
+        // TODO add your handling code here:
+        int j = jTable_Display_Users.getSelectedRow();
+       TableModel model = jTable_Display_Users.getModel();
+       Array[0]= model.getValueAt(j, 0).toString();
+       Array[1]= model.getValueAt(j, 1).toString();
+       Array[2]= model.getValueAt(j, 2).toString();
+       Array[3]= model.getValueAt(j, 3).toString();
+       Array[4]= model.getValueAt(j, 4).toString();
+       Array[5]= model.getValueAt(j, 5).toString();
+       Array[6]= model.getValueAt(j, 6).toString();
+       Array[7]= Id_driver;
+       Array[8]= status;
+       System.out.println(Array[0]);
+       System.out.println(Array[1]);
+       System.out.println(Array[2]);
+       System.out.println(Array[3]);
+       System.out.println(Array[4]);
+       System.out.println(Array[5]);
+       System.out.println(Array[6]);
+       System.out.println(Array[7]);
+       System.out.println(Array[8]);
+       
+       
+       
+    }//GEN-LAST:event_jTable_Display_UsersMousePressed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Order_Page.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Order_Page.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Order_Page.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Order_Page.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel Add_driver2;
+    private javax.swing.JPanel Disribute_order2;
+    private javax.swing.JPanel Driver2;
+    private javax.swing.JPanel Edit_Driver2;
+    private javax.swing.JPanel Edit_order2;
+    private javax.swing.JPanel Orders2;
+    private javax.swing.JTextField ValToSearch;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel45;
+    private javax.swing.JLabel jLabel46;
+    private javax.swing.JLabel jLabel47;
+    private javax.swing.JLabel jLabel48;
+    private javax.swing.JLabel jLabel49;
+    private javax.swing.JLabel jLabel50;
+    private javax.swing.JLabel jLabel51;
+    private javax.swing.JLabel jLabel52;
+    private javax.swing.JLabel jLabel53;
+    private javax.swing.JLabel jLabel54;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JTable jTable_Display_Users;
+    private javax.swing.JPanel logout2;
+    private javax.swing.JButton search;
+    private javax.swing.JPanel sidePare3;
+    // End of variables declaration//GEN-END:variables
+}
